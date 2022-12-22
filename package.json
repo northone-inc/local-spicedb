@@ -10,6 +10,7 @@
   "scripts": {
     "start": "npm run dev",
     "test": "vitest",
+    "lint": "eslint",
     "build": "node esbuild.mjs",
     "dev": "npm run build -- --watch"
   },
