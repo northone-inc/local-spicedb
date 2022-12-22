@@ -2,6 +2,7 @@
 import { existsSync, rmSync } from 'node:fs'
 import { build } from 'esbuild'
 import { dtsPlugin } from 'esbuild-plugin-d.ts'
+import { nodeExternalsPlugin } from 'esbuild-node-externals'
 
 const outdir = 'dist'
 
@@ -13,6 +14,7 @@ build({
   bundle: true,
   logLevel: 'info',
   platform: 'node',
+  target: ['node16', 'esnext'],
   outdir,
   watch,
   // external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
@@ -33,5 +35,6 @@ build({
       },
     },
     dtsPlugin(),
+    nodeExternalsPlugin(),
   ],
 }).catch(() => process.exit(1))

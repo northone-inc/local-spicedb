@@ -1,6 +1,6 @@
 {
   "name": "local-spicedb",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Local SpiceDB instance for testing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,14 +16,18 @@
   "author": "Blake E <blake@northone.com> (https://www.northone.com/)",
   "license": "MIT",
   "dependencies": {
+    "debug": "^4.3.4",
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
-    "@types/shelljs": "^0.8.11",
     "@antfu/eslint-config": "^0.34.0",
     "@tsconfig/node18": "^1.0.1",
+    "@types/debug": "^4.1.7",
+    "@types/shelljs": "^0.8.11",
     "esbuild": "^0.16.10",
+    "esbuild-node-externals": "^1.6.0",
     "esbuild-plugin-d.ts": "^1.1.0",
-    "eslint": "^8.30.0"
+    "eslint": "^8.30.0",
+    "vitest": "^0.26.2"
   }
 }
