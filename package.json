@@ -2,10 +2,15 @@
   "name": "local-spicedb",
   "version": "0.1.0",
   "description": "Local SpiceDB instance for testing",
+  "homepage": "https://github.com/northone-inc/local-spicedb",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/northone-inc/local-spicedb.git"
   },
   "scripts": {
     "start": "npm run dev",
