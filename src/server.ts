@@ -1,6 +1,8 @@
 import type { ChildProcess } from 'child_process'
 import shell from 'shelljs'
+import Debugger from 'debug'
 
+const debug = Debugger('spicedb:server')
 function escapeShellArg(arg: string) {
   return `'${arg.replace(/'/g, '\'\\\'\'')}'`
 }
@@ -18,10 +20,10 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
 
   // set defaults
   process.on('SIGINT', () => {
-    console.log('Caught interrupt signal, killing spicedb...')
+    debug('Caught interrupt signal, killing spicedb...')
     if (ps) {
       ps.kill('SIGINT')
-      console.log('spicedb killed.')
+      debug('spicedb killed.')
     }
   })
 
@@ -30,15 +32,17 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
       if (killExistingProcess) {
         if (shell.exec('pgrep spicedb', { silent: true }).stdout) {
           await shell.exec('killall -9 spicedb')
-          console.log('Killed all spicedb processes already running. Disable with `force-kill=false`')
+          debug('Killed all spicedb processes already running. Disable with `force-kill=false`')
         }
       }
 
       return new Promise((resolve, reject) => {
-        console.log('Starting spicedb...')
+        debug('Starting spicedb...')
         const args = Object.keys(options).map((key) => {
           return `--${key}=${escapeShellArg(options[key].toString())}`
         })
+
+        debug('spicedb', 'serve', ...args)
 
         ps = shell.exec(['spicedb', 'serve', ...args].join(' '), {
           async: true,
@@ -77,7 +81,7 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
 
             logs.forEach((log: StructuredLogLine) => {
               if (verboseLogs) {
-                console.log(log)
+                debug(log)
               }
               if (log.service === 'metrics' && log.message.includes('server started serving')) {
                 metricsServer = {
