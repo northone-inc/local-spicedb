@@ -1,16 +1,46 @@
 # Local SpiceDB
 
+Local SpiceDB instance for testing
+
 - [Local SpiceDB](#local-spicedb)
   - [Features](#features)
-  - [Requirements](#requirements)
+  - [Install](#install)
   - [Usage](#usage)
+  - [Attributions](#attributions)
 
 ## Features
+
 - Interacts with `spicedb` in your local `$PATH`
+- provides start and start server functionality
+- users in-memory to easily throw-away for integration testing
 
+## Install
 
-## Requirements
-- `brew bundle` to install spicedb formula
+```bash
+brew bundle # installs spicedb locally
+npm install -D local-spicedb
+```
 
 ## Usage
 
+```typescript
+import { describe, it } from 'vitest'
+import { SpiceDBServer } from 'local-spicedb'
+
+describe('My SpiceDB Application', () => {
+  it('can start and stop server', async () => {
+    const server = SpiceDBServer({ 'grpc-preshared-key': 'test' })
+    await server.start()
+    // ...
+    // make requests to spicedb server
+    // ...
+    server.stop() # sends SIGINT to running process
+  })
+})
+
+```
+
+## Attributions
+
+- [shelljs](https://www.npmjs.com/package/shelljs)
+- [spicedb](https://github.com/authzed/spicedb) by [AuthZed](https://authzed.com/)
