@@ -12,6 +12,11 @@
     "type": "git",
     "url": "https://github.com/northone-inc/local-spicedb.git"
   },
+  "keywords": [
+    "spicedb",
+    "zanzibar",
+    "testing"
+  ],
   "scripts": {
     "start": "npm run dev",
     "test": "vitest",
