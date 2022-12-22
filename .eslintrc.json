@@ -1,0 +1,8 @@
+{
+  "extends": "@antfu/eslint-config",
+  "rules": {
+    "no-console": ["warn"],
+    "curly": ["error", "multi-line"],
+    "@typescript-eslint/brace-style": "off"
+  }
+}
