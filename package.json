@@ -21,13 +21,17 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.34.0",
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@tsconfig/node18": "^1.0.1",
     "@types/debug": "^4.1.7",
     "@types/shelljs": "^0.8.11",
+    "commitlint": "^17.3.0",
     "esbuild": "^0.16.10",
     "esbuild-node-externals": "^1.6.0",
     "esbuild-plugin-d.ts": "^1.1.0",
     "eslint": "^8.30.0",
+    "husky": "^8.0.2",
     "vitest": "^0.26.2"
   }
 }
