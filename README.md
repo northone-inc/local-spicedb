@@ -32,7 +32,9 @@ describe('My SpiceDB Application', () => {
     const server = SpiceDBServer({ 'grpc-preshared-key': 'test' })
     await server.start()
     // ...
-    // make requests to spicedb server
+    // 1. make requests to spicedb server, default port using pre-shared key above
+    // 2....
+    // 3. great profit
     // ...
     server.stop() # sends SIGINT to running process
   })
