@@ -1,6 +1,6 @@
 {
   "name": "local-spicedb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local SpiceDB instance for testing",
   "homepage": "https://github.com/northone-inc/local-spicedb",
   "main": "dist/index.js",
