@@ -13,6 +13,13 @@
     "build": "node esbuild.mjs",
     "dev": "npm run build -- --watch"
   },
+  "files": [
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md",
+    "LICENSE"
+  ],
   "author": "Blake E <blake@northone.com> (https://www.northone.com/)",
   "license": "MIT",
   "dependencies": {
