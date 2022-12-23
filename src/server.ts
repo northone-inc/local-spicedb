@@ -77,7 +77,14 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
             const logs = data.toString().split('\n')
               .map((row: string) => row.trim())
               .filter((row: string) => row.length > 0)
-              .map((row: string) => JSON.parse(row))
+              .map((row: string) => {
+                try {
+                  return JSON.parse(row)
+                } catch (err) {
+                  console.error('Error parsing log line', row)
+                  throw new Error('Error parsing log line')
+                }
+              })
 
             logs.forEach((log: StructuredLogLine) => {
               if (verboseLogs) {
