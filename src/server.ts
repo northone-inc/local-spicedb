@@ -2,7 +2,7 @@ import type { ChildProcess } from 'child_process'
 import shell from 'shelljs'
 import Debugger from 'debug'
 
-const debug = Debugger('spicedb:server')
+const debug = Debugger('local-spicedb:server')
 function escapeShellArg(arg: string) {
   return `'${arg.replace(/'/g, '\'\\\'\'')}'`
 }
@@ -81,7 +81,7 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
                 try {
                   return JSON.parse(row)
                 } catch (err) {
-                  console.error('Error parsing log line', row)
+                  debug('Error parsing log line', row)
                   throw new Error('Error parsing log line')
                 }
               })

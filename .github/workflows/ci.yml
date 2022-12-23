@@ -52,7 +52,7 @@ jobs:
         run: npm run build
 
       - name: Test
-        run: npm run test
+        run: DEBUG=*local-spicedb* npm run test
 
       # - name: Test Single Thread
       #   run: npm run test:ci:single-thread
