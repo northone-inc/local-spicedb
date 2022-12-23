@@ -17,7 +17,6 @@ build({
   target: ['node16', 'esnext'],
   outdir,
   watch,
-  // external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
   plugins: [
     // custom inline plugin to empty outdir before build
     {
