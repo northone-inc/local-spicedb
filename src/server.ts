@@ -31,8 +31,8 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
     start: async () => {
       if (killExistingProcess) {
         if (shell.exec('pgrep spicedb', { silent: true }).stdout) {
-          await shell.exec('killall -9 spicedb')
-          debug('Killed all spicedb processes already running. Disable with `force-kill=false`')
+          await shell.exec('kill -9 $(pgrep spicedb)')
+          debug('Killed spicedb process already running. Disable with `force-kill=false`')
         }
       }
 
