@@ -81,7 +81,7 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
                 try {
                   return JSON.parse(row)
                 } catch (e) {
-                  throw new Error(`Failed to parse log line: ${row}. Is spicedb running? Is output JSON?`)
+                  throw new Error(`Failed to parse spicedb logline (Is spicedb running? Is output JSON?): ${row}.`)
                 }
               }) as StructuredLogLine[]
 
