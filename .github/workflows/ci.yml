@@ -60,6 +60,7 @@ jobs:
         name: install spicedb on macos
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew unlink go@1.17
           brew install go
           brew link --overwrite go
           brew bundle --no-lock
