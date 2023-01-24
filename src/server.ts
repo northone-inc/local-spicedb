@@ -31,7 +31,7 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
 
   return {
     start: async () => {
-      if (ps?.pid || await processExists('spicedb')) {
+      if (await processExists('spicedb')) {
         await fkill('spicedb')
       }
 
@@ -130,7 +130,7 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
       })
     },
     stop: async () => {
-      if (ps?.pid || await processExists('spicedb')) {
+      if (await processExists('spicedb')) {
         await fkill('spicedb')
       } else {
         throw new Error('Spicedb process not started')
