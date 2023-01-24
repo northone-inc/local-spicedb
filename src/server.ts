@@ -19,7 +19,10 @@ export interface SpiceOptions {
 
 export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
   let ps: ChildProcess | undefined
-
+  const spice_bin = shell.which('spicedb')
+  if (!spice_bin) {
+    throw new Error('spicedb binary not found')
+  }
   // set defaults
   process.on('SIGINT', () => {
     debug('Caught interrupt signal, killing spicedb...')
@@ -45,7 +48,7 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
 
         debug('spicedb', 'serve', ...args)
 
-        ps = shell.exec(['spicedb', 'serve', ...args].join(' '), {
+        ps = shell.exec([spice_bin, 'serve', ...args].join(' '), {
           async: true,
           silent: true,
           fatal: true,
@@ -82,7 +85,12 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
                 try {
                   return JSON.parse(row)
                 } catch (err) {
-                  throw new Error(`Failed to parse JSON Line: ${err}: ${row}`)
+                  if (`${err}`.includes('spicedb: not found')) {
+                    throw new Error('spicedb not found. Please install it.')
+                    // spicedb not found
+                  } else {
+                    throw new Error(`Failed to parse JSON Line: ${err}: ${row}`)
+                  }
                 }
               })
 
