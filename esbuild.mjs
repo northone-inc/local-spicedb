@@ -2,9 +2,11 @@
 import { existsSync, rmSync } from 'node:fs'
 import { build } from 'esbuild'
 import { dtsPlugin } from 'esbuild-plugin-d.ts'
-// import { nodeExternalsPlugin } from 'esbuild-node-externals'
-
+import { nodeExternalsPlugin } from 'esbuild-node-externals'
 const outdir = 'dist'
+
+// const pkg = readFileSync('./package.json', 'utf8')
+// const dependencies = Object.keys(JSON.parse(pkg).dependencies)
 
 // allow some flags pass through to esbuild
 const watch = process.argv.includes('--watch')
@@ -17,7 +19,6 @@ build({
   target: ['node16', 'esnext'],
   outdir,
   watch,
-  external: ['shelljs'],
   plugins: [
     // custom inline plugin to empty outdir before build
     {
@@ -35,6 +36,6 @@ build({
       },
     },
     dtsPlugin(),
-    // nodeExternalsPlugin(),
+    nodeExternalsPlugin(),
   ],
 }).catch(() => process.exit(1))
