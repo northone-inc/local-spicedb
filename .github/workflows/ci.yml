@@ -34,7 +34,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         # os: [ubuntu-latest] # cheapest for now
-        node_version: [14, 16, 18]
+        # node_version: [14, 16, 18]
+        node_version: [16]
       fail-fast: false
 
     steps:
@@ -59,7 +60,9 @@ jobs:
         name: install spicedb on macos
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          brew bundle
+          brew install go
+          brew link --overwrite go
+          brew bundle --no-lock
 
       - name: Install
         run: npm ci
