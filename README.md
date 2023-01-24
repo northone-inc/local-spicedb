@@ -1,5 +1,7 @@
 # Local SpiceDB
 
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/northone-inc/local-spicedb/ci.yml?label=ci)](https://github.com/northone-inc/local-spicedb/actions/workflows/ci.yml)
+
 > **Warning**
 > This project is still experimental, not for production use - FEATURES MAY CHANGE WITHOUT WARNING
 
