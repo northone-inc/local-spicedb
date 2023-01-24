@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
       - if: matrix.os == 'ubuntu-latest'
-        name: install spicedb
+        name: install spicedb on ubuntu
         run: |
           if ! command -v spicedb &> /dev/null
           then
@@ -56,7 +56,7 @@ jobs:
             echo "Spicedb already installed"
           fi
       - if: matrix.os == 'macos-latest'
-        name: install spicedb via hombrew
+        name: install spicedb on macos
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           brew bundle
