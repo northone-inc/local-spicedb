@@ -1,5 +1,8 @@
 # Local SpiceDB
 
+> **Warning**
+> This project is still experimental, not for production use - FEATURES MAY CHANGE WITHOUT WARNING
+
 Local SpiceDB instance for testing
 
 - [Local SpiceDB](#local-spicedb)

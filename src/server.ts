@@ -4,7 +4,7 @@ import Debugger from 'debug'
 import fkill from 'fkill'
 import { processExists } from 'process-exists'
 
-const debug = Debugger('spicedb:server')
+const debug = Debugger('local-spicedb:server')
 function escapeShellArg(arg: string) {
   return `'${arg.replace(/'/g, '\'\\\'\'')}'`
 }
