@@ -32,22 +32,34 @@ jobs:
 
     strategy:
       matrix:
-        # os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest]
         os: [ubuntu-latest] # cheapest for now
         node_version: [14, 16, 18]
+        # node_version: [16]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Set node version to ${{ matrix.node_version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
-      
-      - uses: "authzed/action-spicedb@v1"
-        with:
-          version: "latest"
+      - if: matrix.os == 'ubuntu-latest'
+        name: install spicedb on ubuntu
+        run: |
+          if ! command -v spicedb &> /dev/null
+          then
+            wget -P /tmp https://github.com/authzed/spicedb/releases/download/v1.15.0/spicedb_1.15.0_linux_amd64.deb
+            sudo dpkg -i /tmp/spicedb_1.15.0_linux_amd64.deb
+            sudo apt-get install -f
+          else
+            echo "Spicedb already installed"
+          fi
+      - if: matrix.os == 'macos-latest'
+        name: install spicedb on macos
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew bundle --no-lock
 
       - name: Install
         run: npm ci

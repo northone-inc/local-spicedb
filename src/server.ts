@@ -1,6 +1,8 @@
 import type { ChildProcess } from 'child_process'
 import shell from 'shelljs'
 import Debugger from 'debug'
+import fkill from 'fkill'
+import { processExists } from 'process-exists'
 
 const debug = Debugger('local-spicedb:server')
 function escapeShellArg(arg: string) {
@@ -10,14 +12,39 @@ function escapeShellArg(arg: string) {
 /**
  * Check `spicedb serve --help` for all options
  */
-export interface SpiceOptions {
+export interface SpiceArguments {
   'grpc-preshared-key': string
   [x: string]: number | string | boolean
 }
 
-export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true, verboseLogs = false) => {
-  let ps: ChildProcess | undefined
+export interface SpiceOptions {
+  /**
+   * The path to the spicedb binary
+   * @default `shelljs.which(spicedb)`
+   */
+  bin: string
 
+  /**
+   * Enable spicedb server logs pipe to stdout
+   * @default false
+   */
+  serverLogs?: boolean
+}
+
+export const SpiceDBServer = (spiceArgs: SpiceArguments, opt?: SpiceOptions) => {
+  let ps: ChildProcess | undefined
+  const options = {
+    ...{
+      // defaults
+      bin: shell.which('spicedb'),
+      serverLogs: false,
+    },
+    // user options
+    ...(opt || {}),
+  }
+  if (!options.bin) {
+    throw new Error('spicedb binary not found')
+  }
   // set defaults
   process.on('SIGINT', () => {
     debug('Caught interrupt signal, killing spicedb...')
@@ -29,22 +56,21 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
 
   return {
     start: async () => {
-      if (killExistingProcess) {
-        if (shell.exec('pgrep spicedb', { silent: true }).stdout) {
-          await shell.exec('killall -9 spicedb')
-          debug('Killed all spicedb processes already running. Disable with `force-kill=false`')
-        }
+      if (ps && ps.pid) {
+        ps.kill('SIGINT')
+      } else if (await processExists('spicedb')) {
+        await fkill('spicedb', { silent: true })
       }
 
       return new Promise((resolve, reject) => {
         debug('Starting spicedb...')
-        const args = Object.keys(options).map((key) => {
-          return `--${key}=${escapeShellArg(options[key].toString())}`
+        const args = Object.keys(spiceArgs).map((key) => {
+          return `--${key}=${escapeShellArg(spiceArgs[key].toString())}`
         })
 
         debug('spicedb', 'serve', ...args)
 
-        ps = shell.exec(['spicedb', 'serve', ...args].join(' '), {
+        ps = shell.exec([options.bin, 'serve', ...args].join(' '), {
           async: true,
           silent: true,
           fatal: true,
@@ -81,13 +107,17 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
                 try {
                   return JSON.parse(row)
                 } catch (err) {
-                  debug('Error parsing log line', row)
-                  throw new Error('Error parsing log line')
+                  if (`${err}`.includes('spicedb: not found')) {
+                    throw new Error('spicedb not found. Please install it.')
+                    // spicedb not found
+                  } else {
+                    throw new Error(`Failed to parse JSON Line: ${err}: ${row}`)
+                  }
                 }
               })
 
             logs.forEach((log: StructuredLogLine) => {
-              if (verboseLogs) {
+              if (options.serverLogs) {
                 debug(log)
               }
               if (log.service === 'metrics' && log.message.includes('server started serving')) {
@@ -131,9 +161,11 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
         }
       })
     },
-    stop: () => {
-      if (ps) {
+    stop: async () => {
+      if (ps && ps.pid) {
         ps.kill('SIGINT')
+      } else if (await processExists('spicedb')) {
+        await fkill('spicedb', { silent: true })
       } else {
         throw new Error('Spicedb process not started')
       }

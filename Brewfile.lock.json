@@ -1,0 +1,27 @@
+{
+  "entries": {
+    "tap": {
+      "authzed/tap": {
+        "revision": "1e1538d675353a3218bc775b318a470f7cce0aba"
+      }
+    },
+    "brew": {
+      "authzed/tap/spicedb": {
+        "version": "1.16.1",
+        "bottle": false
+      }
+    }
+  },
+  "system": {
+    "macos": {
+      "monterey": {
+        "HOMEBREW_VERSION": "3.6.20-72-g8f41918",
+        "HOMEBREW_PREFIX": "/usr/local",
+        "Homebrew/homebrew-core": "8e58b2dc921a7603d1bdfab4a9abc89cecfdf2e8",
+        "CLT": "14.2.0.0.1.1668646533",
+        "Xcode": "14.2",
+        "macOS": "12.6"
+      }
+    }
+  }
+}
