@@ -36,7 +36,7 @@ export const SpiceDBServer = (spiceArgs: SpiceArguments, opt?: SpiceOptions) => 
   const options = {
     ...{
       // defaults
-      bin: shell.which('spicedb') || 'spicedb',
+      bin: shell.which('spicedb'),
       serverLogs: false,
     },
     // user options
