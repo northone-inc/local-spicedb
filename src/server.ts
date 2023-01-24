@@ -12,15 +12,35 @@ function escapeShellArg(arg: string) {
 /**
  * Check `spicedb serve --help` for all options
  */
-export interface SpiceOptions {
+export interface SpiceArguments {
   'grpc-preshared-key': string
   [x: string]: number | string | boolean
 }
 
-export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
+export interface SpiceOptions {
+  /**
+   * The path to the spicedb binary
+   * @default `shelljs.which(spicedb)`
+   */
+  bin: string
+
+  /**
+   * Enable spicedb server logs pipe to stdout
+   */
+  serverLogs: boolean
+}
+
+export const SpiceDBServer = (spiceArgs: SpiceArguments, options: SpiceOptions) => {
   let ps: ChildProcess | undefined
-  const spice_bin = shell.which('spicedb')
-  if (!spice_bin) {
+  options = {
+    ...{
+      // defaults
+      bin: shell.which('spicedb') || 'spicedb',
+    },
+    // user options
+    ...options,
+  }
+  if (!options.bin) {
     throw new Error('spicedb binary not found')
   }
   // set defaults
@@ -42,13 +62,13 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
 
       return new Promise((resolve, reject) => {
         debug('Starting spicedb...')
-        const args = Object.keys(options).map((key) => {
-          return `--${key}=${escapeShellArg(options[key].toString())}`
+        const args = Object.keys(spiceArgs).map((key) => {
+          return `--${key}=${escapeShellArg(spiceArgs[key].toString())}`
         })
 
         debug('spicedb', 'serve', ...args)
 
-        ps = shell.exec([spice_bin, 'serve', ...args].join(' '), {
+        ps = shell.exec([options.bin, 'serve', ...args].join(' '), {
           async: true,
           silent: true,
           fatal: true,
@@ -95,7 +115,7 @@ export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
               })
 
             logs.forEach((log: StructuredLogLine) => {
-              if (verboseLogs) {
+              if (options.serverLogs) {
                 debug(log)
               }
               if (log.service === 'metrics' && log.message.includes('server started serving')) {
