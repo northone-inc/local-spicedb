@@ -26,19 +26,21 @@ export interface SpiceOptions {
 
   /**
    * Enable spicedb server logs pipe to stdout
+   * @default false
    */
-  serverLogs: boolean
+  serverLogs?: boolean
 }
 
-export const SpiceDBServer = (spiceArgs: SpiceArguments, options: SpiceOptions) => {
+export const SpiceDBServer = (spiceArgs: SpiceArguments, opt?: SpiceOptions) => {
   let ps: ChildProcess | undefined
-  options = {
+  const options = {
     ...{
       // defaults
       bin: shell.which('spicedb') || 'spicedb',
+      serverLogs: false,
     },
     // user options
-    ...options,
+    ...(opt || {}),
   }
   if (!options.bin) {
     throw new Error('spicedb binary not found')
