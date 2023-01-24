@@ -35,6 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^4.3.4",
+    "fkill": "^8.1.0",
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
@@ -50,6 +51,7 @@
     "esbuild-plugin-d.ts": "^1.1.0",
     "eslint": "^8.30.0",
     "husky": "^8.0.2",
+    "process-exists": "^5.0.0",
     "vitest": "^0.26.2"
   }
 }

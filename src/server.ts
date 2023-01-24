@@ -1,6 +1,8 @@
 import type { ChildProcess } from 'child_process'
 import shell from 'shelljs'
 import Debugger from 'debug'
+import fkill from 'fkill'
+import { processExists } from 'process-exists'
 
 const debug = Debugger('spicedb:server')
 function escapeShellArg(arg: string) {
@@ -15,7 +17,7 @@ export interface SpiceOptions {
   [x: string]: number | string | boolean
 }
 
-export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true, verboseLogs = false) => {
+export const SpiceDBServer = (options: SpiceOptions, verboseLogs = false) => {
   let ps: ChildProcess | undefined
 
   // set defaults
@@ -29,11 +31,8 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
 
   return {
     start: async () => {
-      if (killExistingProcess) {
-        if (shell.exec('pgrep spicedb', { silent: true }).stdout) {
-          await shell.exec('kill -9 $(pgrep spicedb)')
-          debug('Killed spicedb process already running. Disable with `force-kill=false`')
-        }
+      if (ps?.pid || await processExists('spicedb')) {
+        await fkill('spicedb')
       }
 
       return new Promise((resolve, reject) => {
@@ -77,7 +76,13 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
             const logs = data.toString().split('\n')
               .map((row: string) => row.trim())
               .filter((row: string) => row.length > 0)
-              .map((row: string) => JSON.parse(row))
+              .map((row: string) => {
+                try {
+                  return JSON.parse(row)
+                } catch (err) {
+                  throw new Error(`Failed to parse JSON Line: ${err}: ${row}`)
+                }
+              })
 
             logs.forEach((log: StructuredLogLine) => {
               if (verboseLogs) {
@@ -124,9 +129,9 @@ export const SpiceDBServer = (options: SpiceOptions, killExistingProcess = true,
         }
       })
     },
-    stop: () => {
-      if (ps) {
-        ps.kill('SIGINT')
+    stop: async () => {
+      if (ps?.pid || await processExists('spicedb')) {
+        await fkill('spicedb')
       } else {
         throw new Error('Spicedb process not started')
       }
