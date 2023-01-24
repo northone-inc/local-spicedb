@@ -32,15 +32,14 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        # os: [ubuntu-latest] # cheapest for now
-        # node_version: [14, 16, 18]
-        node_version: [16]
+        # os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest] # cheapest for now
+        node_version: [14, 16, 18]
+        # node_version: [16]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
-
       - name: Set node version to ${{ matrix.node_version }}
         uses: actions/setup-node@v3
         with:
@@ -60,7 +59,6 @@ jobs:
         name: install spicedb on macos
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          sudo chown -R $(whoami) /usr/local 
           brew bundle --no-lock
 
       - name: Install
