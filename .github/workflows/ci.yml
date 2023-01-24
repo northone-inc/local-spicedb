@@ -60,7 +60,6 @@ jobs:
         name: install spicedb on macos
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          brew doctor
           sudo chown -R $(whoami) /usr/local 
           brew bundle --no-lock
 
