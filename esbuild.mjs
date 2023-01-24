@@ -10,7 +10,10 @@ const outdir = 'dist'
 const watch = process.argv.includes('--watch')
 
 build({
-  entryPoints: ['src/index.ts'],
+  entryPoints: [
+    'src/index.ts',
+    'src/pm2-control.ts',
+  ],
   bundle: true,
   logLevel: 'info',
   platform: 'node',
