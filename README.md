@@ -41,7 +41,7 @@ describe('My SpiceDB Application', () => {
     // 2....
     // 3. great profit
     // ...
-    server.stop() # sends SIGINT to running process
+    await server.stop() # sends SIGINT to running process
   })
 })
 
