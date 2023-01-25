@@ -4,6 +4,7 @@
 
 > **Warning**
 > This project is still experimental, not for production use - FEATURES MAY CHANGE WITHOUT WARNING
+> THIS Project doesn't work in CircleCI!
 
 Local SpiceDB instance for testing
 
